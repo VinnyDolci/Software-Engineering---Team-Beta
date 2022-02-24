@@ -33,7 +33,7 @@ function setup() {
     slider.style('width', '255px');
     
     slider2 = createSlider(0,can.height,0,1);    
-    slider2.position(100, 30);
+    slider2.position(200, 30);
     slider2.style('width', '255px');    
     
     redSlider = createSlider(0,255,0,1);    
