@@ -1,28 +1,9 @@
 let bgImage;
 let canvasWidth;
 let canvasHeight;
-let canPosX;
 
 var startButton;
 var infoButton;
-
-/*
-var button;
-function setup() { 
-  createCanvas(400, 400);
-  background(220);
-  button = createButton('Email');
-  button.position(10,10);                                 //This exists as a reminder of how to make abutton open a new webpage. 
-  button.mousePressed(openEmail);                         //Our pages will basically just be seaparate canvasses wit hwhatever wa want to display.
-} 
-
-
-function openEmail(){
-  window.open("https://mail.google.com");
-  
-}
-*/
-
 
 // This preloads the image into the bgImage variable before setup
 function preload(){
@@ -30,8 +11,7 @@ function preload(){
 }
 
 
-function setup() {
-  // put setup code here    
+function setup() {    
     canvasWidth = window.innerWidth*.80;
     canvasHeight = window.innerHeight*0.80;
     
@@ -50,7 +30,6 @@ function makeStartButton(){
     startButton.mouseOver(startButtonHover);
     startButton.mouseOut(startButtonStyle);
     startButton.mousePressed(startButtonPress);
-    //startButton.mouseClicked(beginGame);
 }
 
 function makeInfoButton(){    
@@ -59,8 +38,7 @@ function makeInfoButton(){
     infoButtonStyle();
     infoButton.mouseOver(infoButtonHover);
     infoButton.mouseOut(infoButtonStyle);
-    infoButton.mousePressed(infoButtonPress);
-    //infoButton.mouseClicked(showInfo);
+    infoButton.mousePressed(showInfo);    
 }
 
 function startButtonStyle(){    
@@ -94,11 +72,9 @@ function startButtonPress(){
     startButton.style('background-color', 'red');
 }
 
-function infoButtonPress(){
+function showInfo(){    
     infoButton.style('border-radius', '5px');
     infoButton.style('background-color', 'red');
-}
-
-function draw() {  
-    buttonStuff();
+    window.open('info.html');
+    window.close('index.html');
 }
