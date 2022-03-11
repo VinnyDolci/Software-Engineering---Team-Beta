@@ -14,8 +14,8 @@ icon10 = take everything icon
 let bkgrndImage;
 let randNum = 0;
 let i = 0;
-let currImage;
 let emptyImage;
+let imageAarray = ['icon1.svg','icon2.svg','icon3.svg','icon4.svg','icon5.svg','icon6.svg','icon7.svg','icon8.svg','icon9.svg','icon10.svg'];
 
 //time the image appears for
 let t=250;
@@ -70,30 +70,8 @@ function rollButtonHover(){
 function roll(){
     randNum = random(1, 11);
     rollButton.hide();
-    addImage();
-    i = 0;
+    for (let i = 1; i <= randNum; i++){
+        
+    }
     setTimeout(resetRoll, 5000);
 }
-
-function addImage(){
-    if (i <= randNum){
-        i++;
-    }
-    
-    currImage = createImg("DiceIcons/icon" + i + ".svg");
-    
-    currImage.position(width / 2 + 90, height / 2 - 15);
-    
-    setTimeout(removeImage, t);
-    
-    setTimeout(addImage, t);
-}
-
-function removeImage(){
-    currImage.remove();
-}
-
-function resetRoll(){
-    rollButton.show();
-}
-
