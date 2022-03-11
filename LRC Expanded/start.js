@@ -5,6 +5,8 @@ let canvasHeight;
 var startButton;
 var infoButton;
 
+
+
 // This preloads the image into the bgImage variable before setup
 function preload(){
     bgImage = loadImage('images/Background.jpg');
@@ -45,7 +47,7 @@ function startButtonStyle(){
     startButton.style('background-color', '#f7c139');
     startButton.style('border-radius', '10px');
     startButton.style('font-size', '36px');
-    startButton.style('font-family', 'sono');
+    startButton.style('font-family', 'Lato');
     startButton.style('border', 'none');
 }
 
@@ -53,7 +55,7 @@ function infoButtonStyle(){
     infoButton.style('background-color', '#f7c139');
     infoButton.style('border-radius', '10px');
     infoButton.style('font-size', '36px');
-    infoButton.style('font-family', 'sono');
+    infoButton.style('font-family', 'Lato');
     infoButton.style('border', 'none');
 }
 
