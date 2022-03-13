@@ -10,7 +10,6 @@ function preload(){
     bgImage = loadImage('images/Background.jpg');
 }
 
-
 function setup() {    
     canvasWidth = window.innerWidth*.80;
     canvasHeight = window.innerHeight*0.80;
@@ -24,7 +23,7 @@ function setup() {
 }
 
 function makeStartButton(){    
-    startButton = createButton('Start');
+    startButton = createButton('START');
     startButton.position(displayWidth/2-60,displayHeight/2-200);
     startButtonStyle();
     startButton.mouseOver(startButtonHover);
@@ -33,7 +32,7 @@ function makeStartButton(){
 }
 
 function makeInfoButton(){    
-    infoButton = createButton('How-To-Play');
+    infoButton = createButton('HOW-TO-PLAY');
     infoButton.position(displayWidth/2-60,displayHeight/2-150);
     infoButtonStyle();
     infoButton.mouseOver(infoButtonHover);
