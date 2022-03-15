@@ -1,6 +1,6 @@
 # Software-Engineering---Team-Beta
 
-Link to the Live website: http://teambeta.pythonanywhere.com/
+Link to the live website: http://teambeta.pythonanywhere.com/
 
 This project is an adaptation of everyone's favorite game to lose money at, Left-Right-Center!
 
