@@ -109,7 +109,7 @@ function rollButtonStyle(){
     rollButton.style('background-color', '#f7c139');
     rollButton.style('border-radius', '10px');
     rollButton.style('font-size', '36px');
-    rollButton.style('font-family', 'sono');
+    rollButton.style('font-family', 'Lato');
     rollButton.style('border', 'none');
 }
 
