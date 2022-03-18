@@ -71,8 +71,8 @@ function infoButtonHover(){
 function startButtonPress(){
     startButton.style('border-radius', '5px');
     startButton.style('background-color', 'red');
-    //window.open('playScreen.html');
-    //window.close('index.html');
+    window.open('diceRoll.html');
+    window.close('index.html');
 }
 
 function showInfo(){    

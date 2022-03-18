@@ -30,7 +30,7 @@ function backButtonStyle(){
     backButton.style('background-color', '#f7c139');
     backButton.style('border-radius', '10px');
     backButton.style('font-size', '36px');
-    backButton.style('font-family', 'sono');
+    backButton.style('font-family', 'Lato');
     backButton.style('border', 'none');
 }
 
