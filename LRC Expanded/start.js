@@ -26,7 +26,7 @@ function setup() {
 
 function makeStartButton(){    
     startButton = createButton('START');
-    startButton.position(displayWidth/2-60,displayHeight/2-200);
+    startButton.position(displayWidth*0.47,displayHeight*0.40);
     startButtonStyle();
     startButton.mouseOver(startButtonHover);
     startButton.mouseOut(startButtonStyle);
@@ -35,7 +35,7 @@ function makeStartButton(){
 
 function makeInfoButton(){    
     infoButton = createButton('HOW-TO-PLAY');
-    infoButton.position(displayWidth/2-60,displayHeight/2-150);
+    infoButton.position(displayWidth*0.43,displayHeight*0.50);
     infoButtonStyle();
     infoButton.mouseOver(infoButtonHover);
     infoButton.mouseOut(infoButtonStyle);
