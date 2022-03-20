@@ -36,7 +36,7 @@ function setup(){
     
     rectMode(CENTER);
     textAlign(CENTER, CENTER);
-    textFont('sono');
+    textFont('Lato');
     textSize(35);
     makeRollButton();
 }
