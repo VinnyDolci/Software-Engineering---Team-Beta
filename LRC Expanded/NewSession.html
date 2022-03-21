@@ -1,0 +1,26 @@
+<html>
+<body>
+<h1>Generate Code</h1>
+<button type="button" onclick="load_text()">Generate Random Code</button>
+<hr/>
+<h2>The Random Code Is</h2>
+<hr/>
+<div id="example_text"></div>
+<hr/>
+<script>
+    
+function load_text() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+    
+    for (var i = 0; i < 12; i++){
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    
+    element = document.getElementById("example_text");
+    element.innerHTML = text;
+}  
+
+</script>
+</body>
+</html>
