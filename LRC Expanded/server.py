@@ -55,12 +55,13 @@ def get_hello(name=None):
     if 'username' in session:
         username = session['username']
     else:
-        username = 'complete stranger'
+        username = 'unknown user'
+        betaBucks = '???'
     username = session.get('username','complete stranger')
-    favcolor = session.get('favcolor','not known')
+    betaBucks = session.get('betaBucks','not known')
     print('saving loaded session',session)
     save_session(session, response)
-    return template('hello', name=username, color=favcolor)
+    return template('index', name=username, bucks=betaBucks)
 
 @get('/login')
 def get_login():
@@ -72,8 +73,8 @@ def get_login():
 def post_login():
     session = load_session(request)
     username = request.forms['username']
-    favcolor = request.forms['favcolor']
-    session['favcolor'] = favcolor
+    betaBucks = request.forms['betaBucks']
+    session['betaBucks'] = betaBucks
     session['username'] = username
     save_session(session, response)
     redirect('/hello')

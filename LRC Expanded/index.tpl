@@ -39,7 +39,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 <!-- Header -->
 <header class="w3-container w3-green w3-center" style="padding:244px 16px">
   <h1 class="w3-margin w3-jumbo">LRC Expanded</h1>
-  <p class="w3-xlarge">You found it, the best game ever.</p>
+  <p class="w3-xlarge">Welcome {{name}}. You have ${{bucks}} BetaBucks in your account</p>
   <!-- oncliclk() function for Start button-->
   <!--############################################################-->
     <a href="../diceRoll.html"><button class="w3-button w3-black w3-padding-large w3-large w3-margin-top" >Start</button></a>
