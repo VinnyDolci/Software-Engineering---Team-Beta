@@ -1,8 +1,0 @@
-These are the assets for a page that explains the rules of the game to the player.
-
-Included is: 
-A jpg of the page in its current form
-A psd that can be editted by others in Adobe Photoshop
-A jpg of the background, in case others want to repurpose it
-
-Added by Joshua Friedman
