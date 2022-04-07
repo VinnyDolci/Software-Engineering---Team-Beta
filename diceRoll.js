@@ -34,10 +34,10 @@ function preload(){
 function setup(){
     canvasWidth = window.innerWidth*.80;
     canvasHeight = window.innerHeight*0.80;
-    
-    let can = createCanvas(canvasWidth ,canvasHeight);   
+
+    let can = createCanvas(canvasWidth ,canvasHeight);
     can.position(displayWidth-can.width-(.1*displayWidth), displayHeight-can.height-(.2*displayHeight));
-    
+
     rectMode(CENTER);
     textAlign(CENTER, CENTER);
     textFont('Lato');
@@ -47,13 +47,13 @@ function setup(){
 
 function draw(){
     background(bkgrndImage);
-    
+
     //create rectangle with boarder for dice images
     fill('white');
     stroke('black');
     translate(width / 2-101, height / 2 - 101);
     rect(100, 100, 202, 202);
-    
+
      switch(mode){
         case 1:
             fill('black');
@@ -109,7 +109,7 @@ function makeRollButton(){
     rollButton.mousePressed(roll);
 }
 
-function rollButtonStyle(){    
+function rollButtonStyle(){
     rollButton.style('background-color', '#f7c139');
     rollButton.style('border-radius', '10px');
     rollButton.style('font-size', '36px');
@@ -123,7 +123,7 @@ function rollButtonHover(){
 }
 
 function roll(){
-    randNum = random(rollDeck); 
+    randNum = random(rollDeck);
     rollButton.hide();
     addImage();
 }
@@ -131,13 +131,13 @@ function roll(){
 function addImage(){
     if (i < randNum){
         i++;
-        currImage = createImg("DiceIcons/icon" + i + ".svg");
+        currImage = createImg("icon" + i + ".svg");
         currImage.position(width / 2 + 90, height / 2 - 15);
         setTimeout(removeImage, t);
         setTimeout(addImage, t);
     }
     else{
-        currImage = createImg("DiceIcons/icon" + i + ".svg");
+        currImage = createImg("icon" + i + ".svg");
         currImage.position(width / 2 + 90, height / 2 - 15);
         mode = i;
         i = 0;
@@ -156,7 +156,7 @@ function showRoll(){
     mode = 0;
 }
 
-//individual roll functions 
+//individual roll functions
 function center(){
     //stuff
 }

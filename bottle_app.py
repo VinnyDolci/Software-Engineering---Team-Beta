@@ -115,9 +115,13 @@ def get_info():
     save_session(session, response)
     return template('info', message='')
 
-@route('./JS/<path:path>')
-def server_static(path):
-    return static_file(path, root='./JS/')
+@get('./JS/<filepath:re:..*\.js>')
+def js(filepath):
+    return static_file(filepath, root='./JS/')
+
+@route('./images/<filepath:re:..*\.(jpg|png|gif|ico|svg)>')
+def images(filepath):
+    return static_file(filepath, root='./images/')
 
 application = default_app()
 #run(host='localhost', port=8068, reloader=True)
