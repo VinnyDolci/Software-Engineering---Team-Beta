@@ -1,14 +1,14 @@
 /*
-icon1 = center icon
-icon2 = decide icon
-icon3 = do nothing icon
-icon4 = gift from everyone icon
-icon5 = give to everyone icon
-icon6 = left icon
-icon7 = link icon
-icon8 = lose everything icon
-icon9 = right icon
-icon10 = take everything icon
+icon1 = center icon | 19%
+icon2 = decide icon | 9%
+icon3 = do nothing icon | 19%
+icon4 = gift from everyone icon | 4%
+icon5 = give to everyone icon | 6%
+icon6 = left icon | 19%
+icon7 = link icon | 2%
+icon8 = lose everything icon | 2%
+icon9 = right icon | 19%
+icon10 = take everything icon | 1%
 */
 
 let bkgrndImage;
@@ -16,7 +16,11 @@ let randNum = 0;
 let i = 0;
 let mode = 0;
 let currImage;
-let emptyImage;
+
+//this array acts as a deck of cards with the number of each card representing the probability of
+//drawing that card at random; this is then used with the roll function to make certain outcomes
+//statistically more probable than others when the user presses roll.
+let rollDeck = [1,1,3,3,6,6,9,9,2,5,1,1,3,3,6,6,9,9,2,7,1,1,3,3,6,6,9,9,2,5,1,1,3,3,6,6,9,9,2,5,1,1,3,6,6,9,2,4,5,7,1,1,3,3,6,6,9,9,2,4,1,1,3,3,6,6,9,9,2,4,1,1,3,3,6,6,9,9,2,5,1,1,3,3,6,6,9,9,2,8,1,3,3,6,9,9,4,5,8,10];
 
 //time the image appears for
 let t=250;
@@ -119,7 +123,7 @@ function rollButtonHover(){
 }
 
 function roll(){
-    randNum = random(1, 11);
+    randNum = random(rollDeck); 
     rollButton.hide();
     addImage();
 }
@@ -150,4 +154,45 @@ function showRoll(){
     rollButton.show();
     currImage.remove();
     mode = 0;
+}
+
+//individual roll functions 
+function center(){
+    //stuff
+}
+
+function decide(){
+    //stuff
+}
+
+function doNothing(){
+    //stuff
+}
+
+function giftFromEveryone(){
+    //stuff
+}
+
+function giveToEveryone(){
+    //stuff
+}
+
+function left(){
+    //stuff
+}
+
+function link(){
+    //stuff
+}
+
+function loseEverything(){
+    //stuff
+}
+
+function right(){
+    //stuff
+}
+
+function takeEverything(){
+    //stuff
 }
