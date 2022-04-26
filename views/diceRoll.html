@@ -12,11 +12,20 @@
             body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
             .w3-bar,h1,button {font-family: "Montserrat", sans-serif}
             .fa-anchor,.fa-coffee {font-size:200px}
-        </style>
+            <!--#PlayerIcons {
+                    background-color: lightbgreen;
+                    color: black;
+                    padding: 1.0px;
+                    text-align: center;
 
-        <script src="../JS/p5.js"></script>
+            } -->
+        </style>
+        
+        <script src="../JS/p5.js"></script> <!-- sean comment this line out is for the website-->
+        <!-- <script src="/JS/p5.js"></script> --> <!-- sean uncomment this line to run on your machine-->
         <!-- <script src="../addons/p5.sound.js"></script> -->
-        <script src="../JS/diceRoll.js"></script>
+        <!-- <script src="/JS/diceRoll.js"></script> --> <!-- sean uncomment this line to run on your machine--> 
+        <!-- <script src="../JS/diceRoll.js"></script> --> <!-- this is for the server keep commented out for now--> 
     </head>
     <body>
         <!-- Navbar -->
@@ -37,6 +46,35 @@
                 <a href="GameInstructions" class="w3-bar-item w3-button w3-padding-large">Game Instructions</a>
                 <a href="About" class="w3-bar-item w3-button w3-padding-large">About</a>
             </div>
+        </div>
+
+        <div class="w3-green w3-left">
+            <h1 style="color:black; padding:40px 0px 0px 5px">Game ID</h1>
+            <h2 style="color:black; padding:0px 0px 5px 5px">{{gameID}}</h2>
+        </div>
+
+        <!-- Player Icons, commented out ones are for local machines, comment out the others to run-->
+        <div id="PlayerIcons" class="w3-green w3-center" style="padding:50px 100px">
+                <!-- <object data="/images/iconPlayerBlue.png" style="padding:50px"> -->
+                <object data="/views/images/iconPlayerBlue.png" style="padding:50px">
+                   <param name="user0" value="true">
+                </object>
+                <!-- <object data="/images/iconPlayerLime.png" style="padding:50px"> -->
+                <object data="/views/images/iconPlayerLime.png" style="padding:50px">
+                   <param name="user1" value="true">
+                </object>
+                <!-- <object data="/images/iconPlayerOrange.png" style="padding:50px"> -->
+                <object data="/views/images/iconPlayerOrange.png" style="padding:50px">
+                    <param name="user2" value="true">
+                </object>
+                <!-- <object data="/images/iconPlayerRed.png" style="padding:50px"> -->
+                <object data="/views/images/iconPlayerRed.png" style="padding:50px">
+                   <param name="user3" value="true">
+                </object>
+                <!-- <object data="/images/iconPlayerWhite.png" style="padding:50px"> -->
+                <object data="/views/images/iconPlayerWhite.png" style="padding:50px">
+                   <param name="user4" value="true">
+                </object>
         </div>
 
         <header class="w3-container w3-green w3-center" style="padding:450px 16px">

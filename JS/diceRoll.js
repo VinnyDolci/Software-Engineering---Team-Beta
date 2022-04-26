@@ -11,11 +11,29 @@ icon9 = right icon | 19%
 icon10 = take everything icon | 1%
 */
 
-let bkgrndImage;
-let randNum = 0;
-let i = 0;
-let mode = 0;
-let currImage;
+/*
+---system variable well need---
+>turn tracker like some index for the arrays between 1 and 5
+>array for the user beata bucks with the 6th item being the pot 
+>maybe an array of users since the beta bucks will be an array
+>maybe a boolean for whether or not its the current players turn but maybe not if we can keep track of which diceRoll.js file is whos using the turn tracker array
+
+---notes---
+>should the game require 5 players to play for could it operate on less?
+>
+*/
+
+let randNum = 0; //random number for roll outcome 
+let i = 0; //used for roll icons loop
+let mode = 0; //used for switch that displays roll description 
+let currImage; //used for displaying the roll icons
+let users; //string array of users
+let userBetaBucks; //int array of users betabucks, last one is the pot
+let temp; //temporarily stores the string userBetaBucks array, ask seth if you really want to know
+let pot; //game pot
+let can; //canvas
+
+//session boolean
 
 //this array acts as a deck of cards with the number of each card representing the probability of
 //drawing that card at random; this is then used with the roll function to make certain outcomes
@@ -28,15 +46,17 @@ let t=250;
 var rollButton;
 
 function preload(){
-    bkgrndImage = loadImage('images/Background.jpg');
+    //read in users file
+    users = loadStrings("/JS/testUsers.txt"); //the file location is for local machines, change for website
+    //console.log(users);
 }
 
 function setup(){
-    canvasWidth = window.innerWidth*.80;
-    canvasHeight = window.innerHeight*0.80;
+    canvasWidth = window.innerWidth*.30;
+    canvasHeight = window.innerHeight*0.60;
 
-    let can = createCanvas(canvasWidth ,canvasHeight);
-    can.position(displayWidth-can.width-(.1*displayWidth), displayHeight-can.height-(.2*displayHeight));
+    can = createCanvas(canvasWidth ,canvasHeight);
+    can.position(displayWidth-can.width-(.35*displayWidth), displayHeight-can.height-(.03*displayHeight));
 
     rectMode(CENTER);
     textAlign(CENTER, CENTER);
@@ -46,13 +66,20 @@ function setup(){
 }
 
 function draw(){
-    background(bkgrndImage);
+    //background('#4CAF50'); //this is the true background, the other is for testing positions of the canvas
+    background('white');
+    
+    //read in beta bucks file
 
     //create rectangle with boarder for dice images
     fill('white');
     stroke('black');
     translate(width / 2-101, height / 2 - 101);
     rect(100, 100, 202, 202);
+    
+    drawReadFileStart();
+    
+    //console.log(userBetaBucks);
 
      switch(mode){
         case 1:
@@ -98,11 +125,14 @@ function draw(){
         default:
             break;
     }
+    
+    pot = userBetaBucks[userBetaBucks.length-1];
+    //console.log(pot);
 }
 
 function makeRollButton(){
     rollButton = createButton('Roll');
-    rollButton.position(displayWidth/2-40,displayHeight/2+100);
+    rollButton.position(displayWidth-can.width-(.22*displayWidth), displayHeight-can.height-(.1*displayHeight));
     rollButtonStyle();
     rollButton.mouseOver(rollButtonHover);
     rollButton.mouseOut(rollButtonStyle);
@@ -131,14 +161,16 @@ function roll(){
 function addImage(){
     if (i < randNum){
         i++;
-        currImage = createImg("icon" + i + ".svg");
-        currImage.position(width / 2 + 90, height / 2 - 15);
+        //currImage = createImg("icon" + i + ".svg"); //this is for the website 
+        currImage = createImg("/images/icon" + i + ".svg"); //this is for local machines
+        currImage.position(displayWidth-(.575*displayWidth), displayHeight-(.4*displayHeight))
         setTimeout(removeImage, t);
         setTimeout(addImage, t);
     }
     else{
-        currImage = createImg("icon" + i + ".svg");
-        currImage.position(width / 2 + 90, height / 2 - 15);
+        //currImage = createImg("icon" + i + ".svg"); //this is for the website
+        currImage = createImg("/images/icon" + i + ".svg"); //this is for local machines
+        currImage.position(displayWidth-(.575*displayWidth), displayHeight-(.4*displayHeight))
         mode = i;
         i = 0;
         setTimeout(showRoll, 2000);
@@ -154,6 +186,19 @@ function showRoll(){
     rollButton.show();
     currImage.remove();
     mode = 0;
+    
+    //write to server or something
+}
+
+// pain
+function drawReadFileStart(){
+    noLoop();
+    temp = loadStrings("/JS/testBetaBucks.txt", drawReadFileEnd); //the file location is for local machines, change for website
+}
+
+function drawReadFileEnd(){
+    userBetaBucks = int(temp);
+    loop();
 }
 
 //individual roll functions
@@ -173,15 +218,15 @@ function giftFromEveryone(){
     //stuff
 }
 
+function link(){
+    //stuff
+}
+
 function giveToEveryone(){
     //stuff
 }
 
 function left(){
-    //stuff
-}
-
-function link(){
     //stuff
 }
 
