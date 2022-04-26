@@ -1,5 +1,5 @@
 import json
-import os 
+import os
 import random
 import string
 import sys
@@ -12,4 +12,11 @@ def random_id():
 
 x = random_id()
 
-print x
+def test_random_id(y):
+    assert len(x) == 12
+    assert x.isalnum()
+    print("test passed")
+
+test_random_id(x)
+
+print(x)
