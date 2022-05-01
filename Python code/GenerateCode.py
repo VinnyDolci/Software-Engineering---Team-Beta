@@ -13,9 +13,8 @@ def random_id():
 x = random_id()
 
 def test_random_id(y):
-    assert len(x) == 12
-    assert x.isalnum()
-    print("test passed")
+    assert len(y) == 12
+    assert y.isalnum()
 
 test_random_id(x)
 

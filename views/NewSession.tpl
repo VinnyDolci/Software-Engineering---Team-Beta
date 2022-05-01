@@ -14,9 +14,9 @@
 <div class="w3-top">
   <div class="w3-bar w3-lime w3-card w3-left-align w3-large">
     <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-    <a href="index" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
+    <a href="index" class="w3-bar-item w3-button w3-padding-large w3-hover-white">Home</a>
     <a href="login" class="w3-bar-item w3-button w3-padding-large w3-hover-white">Login</a>
-    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">New Session</a>
+    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-blue  w3-white">New Session</a>
     <a href="JoinSession" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Join a Session</a>
     <a href="GameInstructions" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Game Instructions</a>
     <a href="About" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">About</a>
@@ -37,9 +37,13 @@
   <p class="w3-xlarge">Create random code to host a game</p>
   <!-- oncliclk() function for Start button-->
   <!--############################################################-->
-    <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top" onclick="load_text()">Generate</button>
     <h2 class="w3-margin w3-xlarge">The Random Code Is</h2>
-    <div id="example_text" class="w3-black"></div>
+    <form action="/NewSession" method="post" id="code">
+        <div id="example_text" class="w3-black" name></div>
+        <input id="gameID" type="text" name="gameID" readonly/><br/>
+    </form>
+    <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top" type="submit" onclick="load_text()" form="code">Generate</button>
+
 </header>
 <!-- Footer -->
 <footer class="w3-container w3-black w3-padding-64 w3-center w3-opacity">
@@ -56,8 +60,7 @@
                     text += possible.charAt(Math.floor(Math.random() * possible.length));
                 }
 
-                element = document.getElementById("example_text");
-                element.innerHTML = text;
+                element = document.getElementById("gameID").value=text;
             }
 
     </script>

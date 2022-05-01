@@ -1,8 +1,9 @@
 from bottle import run, template, default_app
-from bottle import get, post, route
+from bottle import get, post, route, hook
 from bottle import debug
 from bottle import request, response, redirect
 from bottle import static_file
+
 
 # http://localhost:8080/.... <route>
 
@@ -10,6 +11,9 @@ import os
 import json
 import random
 import string
+import time
+
+usersIn = []
 
 def random_id():
     characters = string.ascii_lowercase + string.digits
@@ -46,6 +50,57 @@ def save_session(session, response):
     response.set_cookie('session_id',session_id)
     print('saved session', session)
 
+def createGame(gameID):
+    session = load_session(request)
+    username = session['username']
+    bucks = session['betaBucks']
+    os.makedirs('data/games', exist_ok=True)
+    with open(f'data/games/{gameID}-users.txt', 'a+') as g:
+        g.write('user0 ' + str(username))
+    with open(f'data/games/{gameID}-bucks.txt', 'a+') as b:
+        b.write('user0 ' + str(bucks))
+    print('Game Created | ', gameID)
+    session['playerIndex'] = 0
+    save_session(session, response)
+
+def joinGame(gameID):
+    print('Joining Game........................................................')
+    index = 0
+    session = load_session(request)
+    username = session['username']
+    bucks = session['betaBucks']
+    with open(f'data/games/{gameID}-users.txt', 'a+') as g:
+        print('Users Opened')
+        g.seek(0)
+        readGame = g.read()
+        if 'user0' in readGame:
+            index += 1
+        if 'user1' in readGame:
+            index += 1
+        if 'user2' in readGame:
+            index += 1
+        if 'user3' in readGame:
+            index += 1
+        g.write('\nuser' + str(index) + ' ' + str(username))
+    index = 0
+    with open(f'data/games/{gameID}-bucks.txt', 'a+') as b:
+        print('Bucks Opened')
+        b.seek(0)
+        readBucks = b.read()
+        if 'user0' in readBucks:
+            index += 1
+        if 'user1' in readBucks:
+            index += 1
+        if 'user2' in readBucks:
+            index += 1
+        if 'user3' in readBucks:
+            index += 1
+        b.write('\nuser' + str(index) + ' ' + str(bucks))
+    session['playerIndex'] = str(index)
+    save_session(session, response)
+    print('Game Joined : ', gameID)
+
+
 #######
 
 @get('/')
@@ -80,10 +135,20 @@ def post_login():
     redirect('/index')
 
 @get('/NewSession')
-def get_NewSession():
+def get_NewSession(gameID=None):
     session = load_session(request)
     save_session(session, response)
-    return template('NewSession', message='')\
+    return template('NewSession', message='')
+
+@post('/NewSession')
+def post_NewSession():
+    session = load_session(request)
+    gameID = request.forms['gameID']
+    session['gameID'] = gameID
+    save_session(session, response)
+    createGame(gameID)
+    time.sleep(3)
+    redirect('/diceRoll')
 
 @get('/About')
 def get_About():
@@ -97,17 +162,139 @@ def get_GameInstructions():
     save_session(session, response)
     return template('GameInstructions', message='')
 
+@post('/JoinSession')
+def post_JoinSession():
+    session = load_session(request)
+    gameID = request.forms['gameID']
+    session['gameID'] = gameID
+    save_session(session, response)
+    joinGame(gameID)
+    time.sleep(3)
+    redirect('/diceRoll')
+
+
 @get('/JoinSession')
 def get_JoinSession():
     session = load_session(request)
     save_session(session, response)
     return template('JoinSession', message='')
 
-@get('/diceRoll')
-def get_diceRoll():
+@post('/updateValues')
+def updateValues():
     session = load_session(request)
+    gameID = session['gameID']
+    rawInfo = json.load(request.forms.get('data'))
+    user0Name = rawInfo.user0Name
+    user0Bucks = rawInfo.user0Bucks
+    user1Name = rawInfo.user1Name
+    user1Bucks = rawInfo.user1Bucks
+    user2Name = rawInfo.user2Name
+    user2Bucks = rawInfo.user2Bucks
+    user3Name = rawInfo.user3Name
+    user3Bucks = rawInfo.user3Bucks
+    user4Name = rawInfo.user4Name
+    user4Bucks = rawInfo.user4Bucks
+
+    with open(f'data/games/{gameID}-bucks.txt', 'w') as g:
+        g.seek(0)
+        lines = g.readlines()
+
+        for line in lines:
+            if 'user0' in line:
+                #g.write('user0 ' + str(user0Bucks) +'\n')
+                g.write('Bitchin')
+            if 'user1' in line:
+                g.write('user1 ' + str(user1Bucks) +'\n')
+            if 'user2' in line:
+                g.write('user2 ' + str(user2Bucks) +'\n')
+            if 'user3' in line:
+                g.write('user3 ' + str(user3Bucks) +'\n')
+            if 'user4' in line:
+                g.write('user4 ' + str(user4Bucks) +'\n')
+
+
     save_session(session, response)
-    return template('diceRoll', message='')
+    return template('diceRoll', gameID=gameID, player0Name=user0Name, player1Name=user1Name, player2Name=user2Name, player3Name=user3Name, player4Name=user4Name, player0Bucks=user0Bucks, player1Bucks=user1Bucks, player2Bucks=user2Bucks, player3Bucks=user3Bucks, player4Bucks=user4Bucks,)
+
+@get('/diceRoll')
+def get_diceRoll(gameID=None):
+    session = load_session(request)
+    if 'gameID' in session:
+        GID = session['gameID']
+    else:
+        GID = 'NO LIVE GAME'
+    GID = session.get('gameID')
+
+## User Name Connections
+    user0Name = ''
+    session['user0Name'] = user0Name
+    user1Name = ''
+    session['user1Name'] = user1Name
+    user2Name = ''
+    session['user2Name'] = user2Name
+    user3Name = ''
+    session['user3Name'] = user3Name
+    user4Name=''
+    session['user4Name'] = user4Name
+
+    with open(f'data/games/{GID}-users.txt', 'r') as g:
+        print('File Opened: ' + GID + '-users.txt')
+        g.seek(0)
+        lines = g.readlines()
+        for line in lines:
+            if 'user0' in line:
+                user0Name = line.partition('user0 ')[2]
+                session['user0Name'] = user0Name
+            if 'user1' in line:
+                user1Name = line.partition('user1 ')[2]
+                session['user1Name'] = user1Name
+            if 'user2' in line:
+                user2Name = line.partition('user2 ')[2]
+                session['user2Name'] = user2Name
+            if 'user3' in line:
+                user3Name = line.partition('user3 ')[2]
+                session['user3Name'] = user3Name
+            if 'user4' in line:
+                user4Name = line.partition('user4 ')[2]
+                session['user4Name'] = user4Name
+
+## User Bucks Connections
+    user0Bucks = ''
+    session['user0Bucks'] = user0Bucks
+    user1Bucks = ''
+    session['user1Bucks'] = user1Bucks
+    user2Bucks = ''
+    session['user2Bucks'] = user2Bucks
+    user3Bucks = ''
+    session['user3Bucks'] = user3Bucks
+    user4Bucks=''
+    session['user4Bucks'] = user4Bucks
+
+    with open(f'data/games/{GID}-bucks.txt', 'r') as g:
+        print('File Opened: ' + GID + '-bucks.txt')
+        g.seek(0)
+        lines = g.readlines()
+        for line in lines:
+            if 'user0' in line:
+                user0Bucks = line.partition('user0 ')[2]
+                session['user0Bucks'] = user0Bucks
+            if 'user1' in line:
+                user1Bucks = line.partition('user1 ')[2]
+                session['user1Bucks'] = user1Bucks
+            if 'user2' in line:
+                user2Bucks = line.partition('user2 ')[2]
+                session['user2Bucks'] = user2Bucks
+            if 'user3' in line:
+                user3Bucks = line.partition('user3 ')[2]
+                session['user3Bucks'] = user3Bucks
+            if 'user4' in line:
+                user4Bucks = line.partition('user4 ')[2]
+                session['user4Bucks'] = user4Bucks
+
+    #user0Name = "Vince"
+
+    save_session(session, response)
+    return template('diceRoll', gameID=GID, player0Name=user0Name, player1Name=user1Name, player2Name=user2Name, player3Name=user3Name, player4Name=user4Name, player0Bucks=user0Bucks, player1Bucks=user1Bucks, player2Bucks=user2Bucks, player3Bucks=user3Bucks, player4Bucks=user4Bucks,)
 
 @get('/info')
 def get_info():
@@ -115,9 +302,13 @@ def get_info():
     save_session(session, response)
     return template('info', message='')
 
-@get('./JS/<filepath:re:..*\.js>')
+@route('./views/JS/<filepath:re:..*\.js>')
 def js(filepath):
-    return static_file(filepath, root='./JS/')
+    return static_file(filepath, root='./views/JS/')
+
+@route('../data/games/<filepath:re:..*\.txt>')
+def textFile(filepath):
+    return static_file(filepath, root='../data/games/')
 
 @route('./images/<filepath:re:..*\.(jpg|png|gif|ico|svg)>')
 def images(filepath):
