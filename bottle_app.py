@@ -59,7 +59,11 @@ def createGame(gameID):
         g.write('user0 ' + str(username))
     with open(f'data/games/{gameID}-bucks.txt', 'a+') as b:
         b.write('user0 ' + str(bucks))
+    with open(f'data/games/{gameID}-gameInfo.txt', 'a+') as a:
+        a.write('currentUser 0\npot 0')
     print('Game Created | ', gameID)
+    session['currentUser'] = 0
+    session['pot'] = 0
     session['playerIndex'] = 0
     save_session(session, response)
 
@@ -96,6 +100,12 @@ def joinGame(gameID):
         if 'user3' in readBucks:
             index += 1
         b.write('\nuser' + str(index) + ' ' + str(bucks))
+    with open(f'data/games/{gameID}-gameInfo.txt', 'a+') as a:
+        a.seek(0)
+        a.seek(12)
+        session['currentUser'] = a.read(1)
+        a.seek(18)
+        session['pot'] = a.read(1)
     session['playerIndex'] = str(index)
     save_session(session, response)
     print('Game Joined : ', gameID)
@@ -147,7 +157,8 @@ def post_NewSession():
     session['gameID'] = gameID
     save_session(session, response)
     createGame(gameID)
-    time.sleep(3)
+    time.sleep(.5)
+    response.set_cookie('gameID',gameID)
     redirect('/diceRoll')
 
 @get('/About')
@@ -169,7 +180,7 @@ def post_JoinSession():
     session['gameID'] = gameID
     save_session(session, response)
     joinGame(gameID)
-    time.sleep(3)
+    time.sleep(.5)
     redirect('/diceRoll')
 
 
@@ -183,38 +194,89 @@ def get_JoinSession():
 def updateValues():
     session = load_session(request)
     gameID = session['gameID']
-    rawInfo = json.load(request.forms.get('data'))
-    user0Name = rawInfo.user0Name
-    user0Bucks = rawInfo.user0Bucks
-    user1Name = rawInfo.user1Name
-    user1Bucks = rawInfo.user1Bucks
-    user2Name = rawInfo.user2Name
-    user2Bucks = rawInfo.user2Bucks
-    user3Name = rawInfo.user3Name
-    user3Bucks = rawInfo.user3Bucks
-    user4Name = rawInfo.user4Name
-    user4Bucks = rawInfo.user4Bucks
+
+    #rawInfo = json.load(request.forms.get('data'))
+    rawInfo = request.json
+
+    user0Name = rawInfo['user0Name']
+    user0Bucks = rawInfo['user0Bucks']
+    user1Name = rawInfo['user1Name']
+    user1Bucks = rawInfo['user1Bucks']
+    user2Name = rawInfo['user2Name']
+    user2Bucks = rawInfo['user2Bucks']
+    user3Name = rawInfo['user3Name']
+    user3Bucks = rawInfo['user3Bucks']
+    user4Name = rawInfo['user4Name']
+    user4Bucks = rawInfo['user4Bucks']
+
+    currentUser = rawInfo['current']
+    pot = rawInfo['sizeOfPot']
+
+    print('--------------------------------------------------------------')
+    print(currentUser)
+    print(pot)
+    print('--------------------------------------------------------------')
+
+    session['user0Name'] = user0Name
+    session['user0Bucks'] = user0Bucks
+    session['user1Name'] = user1Name
+    session['user1Bucks'] = user1Bucks
+    session['user2Name'] = user2Name
+    session['user2Bucks'] = user2Bucks
+    session['user3Name'] = user3Name
+    session['user3Bucks'] = user3Bucks
+    session['user4Name'] = user4Name
+    session['user4Bucks'] = user4Bucks
+    session['currentUser'] = currentUser
+    session['pot'] = pot
+
 
     with open(f'data/games/{gameID}-bucks.txt', 'w') as g:
         g.seek(0)
-        lines = g.readlines()
+        #lines = g.readlines()
 
-        for line in lines:
-            if 'user0' in line:
-                #g.write('user0 ' + str(user0Bucks) +'\n')
-                g.write('Bitchin')
-            if 'user1' in line:
-                g.write('user1 ' + str(user1Bucks) +'\n')
-            if 'user2' in line:
-                g.write('user2 ' + str(user2Bucks) +'\n')
-            if 'user3' in line:
-                g.write('user3 ' + str(user3Bucks) +'\n')
-            if 'user4' in line:
-                g.write('user4 ' + str(user4Bucks) +'\n')
+        if user1Bucks == "":
+            lines = ["user0 " + str(user0Bucks)]
+        elif user2Bucks == "":
+            lines = ["user0 " + str(user0Bucks), "\nuser1 " + str(user1Bucks)]
+        elif user3Bucks == "":
+            lines = ["user0 " + str(user0Bucks), "\nuser1 " + str(user1Bucks), "\nuser2 " + str(user2Bucks)]
+        elif user4Bucks == "":
+            lines = ["user0 " + str(user0Bucks), "\nuser1 " + str(user1Bucks), "\nuser2 " + str(user2Bucks), "\nuser3 " + str(user3Bucks)]
+        else:
+            lines = ["user0 " + str(user0Bucks), "\nuser1 " + str(user1Bucks), "\nuser2 " + str(user2Bucks), "\nuser3 " + str(user3Bucks), "\nuser4 " + str(user4Bucks)]
 
+        g.writelines(lines)
+
+    with open(f'data/games/{gameID}-users.txt', 'w') as u:
+        u.seek(0)
+        if user1Name == "":
+            userlines = ["user0 " + str(user0Name)]
+        elif user2Name == "":
+            userlines = ["user0 " + str(user0Name), "\nuser1 " + str(user1Name)]
+        elif user3Name == "":
+            userlines = ["user0 " + str(user0Name), "\nuser1 " + str(user1Name), "\nuser2 " + str(user2Name)]
+        elif user4Name == "":
+            userlines = ["user0 " + str(user0Name), "\nuser1 " + str(user1Name), "\nuser2 " + str(user2Name), "\nuser3 " + str(user3Name)]
+        else:
+            userlines = ["user0 " + str(user0Name), "\nuser1 " + str(user1Name), "\nuser2 " + str(user2Name), "\nuser3 " + str(user3Name), "\nuser4 " + str(user4Name)]
+
+        u.writelines(userlines)
+
+    with open(f'data/games/{gameID}-gameInfo.txt', 'w+') as a:
+        a.seek(0)
+        a.write("currentUser " + str(currentUser) + "\npot " + str(pot))
+
+    # IDEA
+    # Create a cookie for each user's betaBucks in the Get for /diceRoll
+    # Modify those cookies in Javascript:  document.cookie = "username=Max Brown"
+    # Access and use those cookies to rewrite the txt file in python: response.set_cookie('session_id',session_id)
+    # The AJAX call then only needs to invoke this /updateValues function
+    # This SHOULD work. but who knows.
 
     save_session(session, response)
-    return template('diceRoll', gameID=gameID, player0Name=user0Name, player1Name=user1Name, player2Name=user2Name, player3Name=user3Name, player4Name=user4Name, player0Bucks=user0Bucks, player1Bucks=user1Bucks, player2Bucks=user2Bucks, player3Bucks=user3Bucks, player4Bucks=user4Bucks,)
+    #return template('diceRoll', gameID=gameID, player0Name=user0Name, player1Name=user1Name, player2Name=user2Name, player3Name=user3Name, player4Name=user4Name, player0Bucks=user0Bucks, player1Bucks=user1Bucks, player2Bucks=user2Bucks, player3Bucks=user3Bucks, player4Bucks=user4Bucks,)
+    return json.dumps({'status':200, 'success': True})
 
 @get('/diceRoll')
 def get_diceRoll(gameID=None):
@@ -292,9 +354,10 @@ def get_diceRoll(gameID=None):
                 session['user4Bucks'] = user4Bucks
 
     #user0Name = "Vince"
-
+    potAmount = session['pot']
+    username = session['username']
     save_session(session, response)
-    return template('diceRoll', gameID=GID, player0Name=user0Name, player1Name=user1Name, player2Name=user2Name, player3Name=user3Name, player4Name=user4Name, player0Bucks=user0Bucks, player1Bucks=user1Bucks, player2Bucks=user2Bucks, player3Bucks=user3Bucks, player4Bucks=user4Bucks,)
+    return template('diceRoll', gameID=GID, player0Name=user0Name, player1Name=user1Name, player2Name=user2Name, player3Name=user3Name, player4Name=user4Name, player0Bucks=user0Bucks, player1Bucks=user1Bucks, player2Bucks=user2Bucks, player3Bucks=user3Bucks, player4Bucks=user4Bucks, name=username, pot=potAmount)
 
 @get('/info')
 def get_info():

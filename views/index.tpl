@@ -27,6 +27,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     <a href="JoinSession" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Join a Session</a>
     <a href="GameInstructions" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Game Instructions</a>
     <a href="About" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">About</a>
+    <a href="diceRoll" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Game</a>
   </div>
 
   <!-- Navbar on small screens -->
@@ -44,11 +45,44 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
   <p class="w3-xlarge">Welcome {{name}}. You have ${{bucks}} BetaBucks in your account</p>
   <!-- oncliclk() function for Start button-->
   <!--############################################################-->
+    <a href="login"><button class="w3-button w3-black w3-hover-white w3-padding-large w3-large w3-margin-top">Login</button></a>
     <a href="JoinSession"><button class="w3-button w3-black w3-hover-white w3-padding-large w3-large w3-margin-top" >Join A Game Session</button></a>
+    <button class="w3-button w3-yellow w3-hover-white w3-padding-large w3-large w3-margin-top"  onclick="run_test()">Test Login Feature</button>
     <p class="w3-large" style="color:red;"> Game will display improperly for monitors other than 1080p (TBD)</p>
+    <p class="w3-large" style="color:red;">Do Not Attempt To Join A Game Session Before Logging In</p>
 </header>
 
+<script>
+    function getCookie(cname) {
+        console.log("getCookie Entered");
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                 c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
 
+    function run_test(){
+        document.cookie = "testing=true";
+        window.location.href = "/login";
+    }
+
+    window.onload = async function keep_test(){
+        let testing = getCookie("testing");
+        if(testing == 'true'){
+            await new Promise(resolve => setTimeout(resolve, 750));
+            window.location.href = "/NewSession";
+        }
+    }
+</script>
 
 
 <!-- Footer -->

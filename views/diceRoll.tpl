@@ -28,19 +28,26 @@
 
         <!-- PRO GAMER MOVE -->
         <script>
-            let userName;
-let currentUserTurn;
+            let userName = "";
+            let userJoinIndex;
+let currentUser;
 let randNum = 0; //random number for roll outcome
 let i = 0; //used for roll icons loop
 let mode = 0; //used for switch that displays roll description
 let currImage; //used for displaying the roll icons
 let users = []; //string array of users
 let userBetaBucks = []; //int array of users betabucks, last one is the pot
-let temp; //temporarily stores the string userBetaBucks array, ask seth if you really want to know
-let pot; //game pot
+let temp = []; //temporarily stores the string userBetaBucks array, ask seth if you really want to know
+let gameInfo = [];
+let tempPot;
+let pot = 0; //game pot
 let can; //canvas
 let hasBeenCalled = false;
 let counter = 0;
+let usersRead = false;
+let bucksRead = false;
+let rawData = new Object();
+let initialFileLength;
 
 //this array acts as a deck of cards with the number of each card representing the probability of
 //drawing that card at random; this is then used with the roll function to make certain outcomes
@@ -55,6 +62,9 @@ var rollButton;
 
 function preload(){
     //read in users file
+
+    console.log('{{name}}');
+    userName = '{{name}}';
 }
 
 function setup(){
@@ -71,13 +81,19 @@ function setup(){
     textSize(35);
     makeRollButton();
 
-    setInterval(updateInfo, 1000);
-    //userName = users[userInfo.joinIndex];
+    setInterval(updateInfo, 3000);
+    //setInterval(ajaxThing, 3000);
 }
 
 function draw(){
     background('#4CAF50'); //this is the true background, the other is for testing positions of the canvas
     //background('white');
+
+    if (userName != users[currentUser]){
+        rollButton.hide();
+    } else {
+        rollButton.show();
+    }
 
     //read in beta bucks file
 
@@ -190,7 +206,7 @@ function rollButtonHover(){
 }
 
 function roll(){
-    randNum = random(rollDeck);
+    randNum = random(testDeck);
     rollButton.hide();
     addImage();
 }
@@ -208,7 +224,7 @@ function addImage(){
         currImage.position(displayWidth-can.width-(.253*displayWidth), 390)
         mode = i;
         i = 0;
-        setTimeout(showRoll, 2000);
+        setTimeout(showRoll, 3000);
     }
 }
 
@@ -218,7 +234,7 @@ function removeImage(){
 
 
 function showRoll(){
-    rollButton.show();
+    //rollButton.show();
     currImage.remove();
     mode = 0;
     hasBeenCalled = false;
@@ -226,70 +242,108 @@ function showRoll(){
 }
 
 // pain
+function drawReadGameInfoFileEnd(){
+        currentUser = gameInfo[0].slice(12);
+        tempPot = gameInfo[1].slice(4);
+        pot = int(tempPot);
+}
+
 function drawReadBetaBucksFileEnd(){
     for (let i = 0; i < temp.length; ++i){
-        temp[i] = temp[i].slice(6);
+            temp[i] = temp[i].slice(6);
     }
     userBetaBucks = int(temp);
     console.log(userBetaBucks);
 }
 
 function drawReadUserFileEnd(){
-    console.log("Before For: " + users.length);
     for (let i = 0; i < users.length; ++i){
-        users[i] = users[i].slice(6);
+            users[i] = users[i].slice(6);
+            if (users[i] == userName){
+                userJoinIndex = i;
+            }
+    }
+    console.log("DrawReadUserFileEnd: " + users.length);
+    if(initialFileLength < users.length){
+        setTimeout(ajaxThing, 2000);
     }
     console.log(users);
-    console.log("After For: " + users.length);
-    //loop();
 }
 
 function updateInfo(){
+    initialFileLength = users.length;
+    gameInfo = loadStrings('{{gameID}}-gameInfo.txt', drawReadGameInfoFileEnd);
     temp = loadStrings(`{{gameID}}-bucks.txt`, drawReadBetaBucksFileEnd);
-
-    console.log("Before Callback: " + users.length);
     users = loadStrings(`{{gameID}}-users.txt`, drawReadUserFileEnd);
     ++counter;
     console.log(counter);
 }
 
 function ajaxThing(){
-    console.log("AJAX: " + users.length)
+    console.log("AJAX: " + users.length + " " + users)
 
     switch(users.length){
         case 1:
             users[1] = ""; users[2] = ""; users[3] = ""; users[4] = "";
             userBetaBucks[1] = ""; userBetaBucks[2] = ""; userBetaBucks[3] = ""; userBetaBucks[4] = "";
+            break;
         case 2:
             users[2] = ""; users[3] = ""; users[4] = "";
             userBetaBucks[2] = ""; userBetaBucks[3] = ""; userBetaBucks[4] = "";
+            break;
         case 3:
             users[3] = ""; users[4] = "";
             userBetaBucks[3] = ""; userBetaBucks[4] = "";
+            break;
         case 4:
             users[4] = "";
             userBetaBucks[4] = "";
+            break;
+        default:
+            break;
 
     }
 
-    let rawData = {"user0Name": users[0],
-         "user0Bucks": userBetaBucks[0],
-         "user1Name": users[1],
-         "user1Bucks": userBetaBucks[1],
-         "user2Name": users[2],
-         "user2Bucks": userBetaBucks[2],
-         "user3Name": users[3],
-         "user3Bucks": userBetaBucks[3],
-         "user4Name": users[4],
-         "user4Bucks": userBetaBucks[4]
+    console.log('-------------');
+    console.log(currentUser);
+    console.log(pot);
+    console.log('-------------');
+
+   rawData = {user0Name: users[0],
+         user0Bucks: userBetaBucks[0],
+         user1Name: users[1],
+         user1Bucks: userBetaBucks[1],
+         user2Name: users[2],
+         user2Bucks: userBetaBucks[2],
+         user3Name: users[3],
+         user3Bucks: userBetaBucks[3],
+         user4Name: users[4],
+         user4Bucks: userBetaBucks[4],
+         current: currentUser,
+         sizeOfPot: pot
         };
+
 
     $.ajax({
         url: "/updateValues",
         type: "POST",
         dataType: "json",
-        data: rawData,
+        data: JSON.stringify(rawData),
         contentType: "application/json;",
+        success: function(rawData){
+            $(player0Name).replaceWith("<div id='player0Name' style='padding:10px; color:black; color:black'>" + users[0] + "</div>");
+            $(player1Name).replaceWith("<div id='player1Name' style='padding:10px; color:black; color:black'>" + users[1] + "</div>");
+            $(player2Name).replaceWith("<div id='player2Name' style='padding:10px; color:black; color:black'>" + users[2] + "</div>");
+            $(player3Name).replaceWith("<div id='player3Name' style='padding:10px; color:black; color:black'>" + users[3] + "</div>");
+            $(player4Name).replaceWith("<div id='player4Name' style='padding:10px; color:black; color:black'>" + users[4] + "</div>");
+
+            $(player0Bucks).replaceWith("<div id='player0Bucks' style='padding:10px; color:black; color:black'>" + userBetaBucks[0] + "</div>");
+            $(player1Bucks).replaceWith("<div id='player1Bucks' style='padding:10px; color:black; color:black'>" + userBetaBucks[1] + "</div>");
+            $(player2Bucks).replaceWith("<div id='player2Bucks' style='padding:10px; color:black; color:black'>" + userBetaBucks[2] + "</div>");
+            $(player3Bucks).replaceWith("<div id='player3Bucks' style='padding:10px; color:black; color:black'>" + userBetaBucks[3] + "</div>");
+            $(player4Bucks).replaceWith("<div id='player4Bucks' style='padding:10px; color:black; color:black'>" + userBetaBucks[4] + "</div>");
+            $(potAmount).replaceWith("<div id='potAmount'><h2 style='color:black; padding:0px 0px 5px 5px'>" + pot + "</h2></div>");
+        }
     });
     console.log("AJAX Complete");
 }
@@ -298,7 +352,14 @@ function ajaxThing(){
 function myCenter(){
     //stuff
     hasBeenCalled = true;
-    //ajaxThing();
+    userBetaBucks[currentUser] = userBetaBucks[currentUser] - 1;
+    pot = pot + 1;
+    if(currentUser == users.length - 1){
+        currentUser = 0;
+    } else {
+        currentUser++;
+    }
+    ajaxThing();
 }
 
 function myDecide(){
@@ -370,8 +431,44 @@ function myTakeEverything(){
 
         <div class="w3-green w3-left" ">
             <h1 style="color:black; padding:40px 0px 0px 5px">Game ID</h1></br>
-            <h2 style="color:black; padding:0px 0px 5px 5px">{{gameID}}</h2>
+            <h2 style="color:black; padding:0px 0px 5px 5px; font-family:serif;">{{gameID}}</h2>
+
+            <h1 style="color:black; padding:40px 0px 0px 5px">Pot</h1></br>
+            <div id="potAmount"><h2 style="color:black; padding:0px 0px 5px 5px">{{pot}}</h2></div>
+
+            <h1 style="color:yellow; padding:40px 0px 0px 5px; visibility:hidden;" id="testing">TESTING PASSED</h1></br>
         </div>
+
+        <script>
+            function getCookie(cname) {
+                console.log("getCookie Entered");
+                let name = cname + "=";
+                let decodedCookie = decodeURIComponent(document.cookie);
+                let ca = decodedCookie.split(';');
+                for(let i = 0; i <ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            }
+            window.onload = function finish_test(){
+                let testing = getCookie("testing");
+                let testDisplay;
+                if(testing == 'true'){
+                    testDisplay = document.getElementById("testing");
+                    testDisplay.style.visibility = "visible";
+                    document.cookie = "testing=false";
+                }
+                if (testDisplay.style.visibility == "visible"){
+                    console.log("Testing Passed");
+                }
+            }
+        </script>
 
         <!-- Player Icons -->
         <div id="PlayerIcons" class="w3-green w3-center" style="padding:40px 100px 0px; margin-left:450px">
@@ -380,7 +477,7 @@ function myTakeEverything(){
                 <div id="player0Name" style="padding:10px; color:black">
                     {{player0Name}}
                 </div>
-                <div id="player0Bucks" style="padding:10px; color:black; color:black">
+                <div id="player0Bucks" style="padding:10px; color:black;">
                     {{player0Bucks}}
                 </div>
             </div>
@@ -434,6 +531,4 @@ function myTakeEverything(){
             <a href="https://github.com/VinnyDolci/Software-Engineering---Team-Beta">View the Game Project on GitHub</a>
         </footer>
     </body>
-
-
 </html>

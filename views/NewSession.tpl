@@ -20,6 +20,7 @@
     <a href="JoinSession" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Join a Session</a>
     <a href="GameInstructions" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Game Instructions</a>
     <a href="About" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">About</a>
+    <a href="diceRoll" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Game</a>
   </div>
 
   <!-- Navbar on small screens -->
@@ -42,7 +43,7 @@
         <div id="example_text" class="w3-black" name></div>
         <input id="gameID" type="text" name="gameID" readonly/><br/>
     </form>
-    <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top" type="submit" onclick="load_text()" form="code">Generate</button>
+    <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top" type="submit" id="generate" onclick="load_text()" form="code">Generate</button>
 
 </header>
 <!-- Footer -->
@@ -61,6 +62,33 @@
                 }
 
                 element = document.getElementById("gameID").value=text;
+            }
+
+            function getCookie(cname) {
+                console.log("getCookie Entered");
+                let name = cname + "=";
+                let decodedCookie = decodeURIComponent(document.cookie);
+                let ca = decodedCookie.split(';');
+                for(let i = 0; i <ca.length; i++) {
+                    let c = ca[i];
+                        while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            }
+
+            window.onload = function continue_test(){
+                let testing = getCookie("testing");
+                if (testing == 'true'){
+                    console.log("IF entered");
+                    let button = document.getElementById("generate");
+                    console.log(button);
+                    button.click();
+                }
             }
 
     </script>
